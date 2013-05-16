@@ -13,22 +13,22 @@ Installation
 Methods
 -------
 
-* **setDebugVerbose** - Control the debug output.
-* **setUrl** - The URL to fetch.
-* **setMethod** - HTTP request method. (can be CWSCURL_METHOD_DELETE ; CWSCURL_METHOD_GET ; CWSCURL_METHOD_HEAD ; CWSCURL_METHOD_POST ; CWSCURL_METHOD_PUT)
-* **addParam** - Add custom parameters to the cURL request.
-* **setTimeout** - The maximum number of seconds to allow cURL functions to execute.
-* **setReferer** - The contents of the "Referer: " header to be used in a HTTP request.
-* **setUserAgent** - The contents of the "User-Agent: " header to be used in a HTTP request. (can be CWSCURL_UA_CHROME ; CWSCURL_UA_FIREFOX ; CWSCURL_UA_GOOGLEBOT ; CWSCURL_UA_IE ; CWSCURL_UA_OPERA)
-* **setAuth** - Set authentication to the cURL request with username and password.
-* **setRedirect** - Allow redirects.
-* **setMaxRedirect** - Maximum redirects allowed.
+**setDebugVerbose** - Control the debug output.<br />
+**setUrl** - The URL to fetch.<br />
+**setMethod** - HTTP request method. (can be CWSCURL_METHOD_DELETE ; CWSCURL_METHOD_GET ; CWSCURL_METHOD_HEAD ; CWSCURL_METHOD_POST ; CWSCURL_METHOD_PUT)<br />
+**addParam** - Add custom parameters to the cURL request.<br />
+**setTimeout** - The maximum number of seconds to allow cURL functions to execute.<br />
+**setReferer** - The contents of the "Referer: " header to be used in a HTTP request.<br />
+**setUserAgent** - The contents of the "User-Agent: " header to be used in a HTTP request. (can be CWSCURL_UA_CHROME ; CWSCURL_UA_FIREFOX ; CWSCURL_UA_GOOGLEBOT ; CWSCURL_UA_IE ; CWSCURL_UA_OPERA)<br />
+**setAuth** - Set authentication to the cURL request with username and password.<br />
+**setRedirect** - Allow redirects.<br />
+**setMaxRedirect** - Maximum redirects allowed.<br />
 
-* **process** - Start the cURL request.
+**process** - Start the cURL request.<br />
 
-* **getSession** - The current cURL session.
-* **getStatus** - The HTTP status code returned.
-* **getContent** - The content transfered.
-* **getInfos** - The cURL information regarding the transfer.
-* **getHeaderFulltext** - The header fulltext response.
-* **getHeaders** - The headers response.
+**getSession** - The current cURL session.<br />
+**getStatus** - The HTTP status code returned.<br />
+**getContent** - The content transferred.<br />
+**getInfos** - The cURL information regarding the transfer.<br />
+**getHeaderFulltext** - The header fulltext response.<br />
+**getHeaders** - The headers response.<br />

@@ -129,7 +129,7 @@ class CwsCurl
     private $status;
     
     /**
-     * The content transfered.
+     * The content transferred.
      * @var string
      */
     private $content;
