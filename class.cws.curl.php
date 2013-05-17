@@ -119,6 +119,43 @@ class CwsCurl
     private $max_redirect = 3;
     
     /**
+     * The hosqt IP of the proxy to connect to.
+     * @var string
+     */
+    private $proxy_host;
+    
+    /**
+     * The port number of the proxy to connect to.
+     * @var int
+     */
+    private $proxy_port;
+    
+    /**
+     * The proxy type CURLPROXY_HTTP, CURLPROXY_SOCKS4 or CURLPROXY_SOCKS5.
+     * @var int
+     */
+    private $proxy_type;
+    
+    /**
+     * The HTTP authentication method(s) to use for the proxy connection.
+     * Can be CURLAUTH_BASIC or CURLAUTH_NTLM.
+     * @var int
+     */
+    private $proxy_auth_type;
+    
+    /**
+     * The username for the CURLOPT_PROXYUSERPWD option.
+     * @var string
+     */
+    private $proxy_username;
+    
+    /**
+     * The password associated to the proxy_username for the CURLOPT_PROXYUSERPWD option.
+     * @var string
+     */
+    private $proxy_password;
+    
+    /**
      * The cURL session.
      * @var object
      */
@@ -267,6 +304,20 @@ class CwsCurl
             curl_setopt($this->session, CURLOPT_USERPWD, $this->username . ':' . $this->password);
         }
         
+        if ($this->proxy_host && $this->proxy_port) {
+            curl_setopt($this->session, CURLOPT_HTTPPROXYTUNNEL, true);
+            curl_setopt($this->session, CURLOPT_PROXY, $this->proxy_host . ':' . $this->proxy_port);
+            if ($this->proxy_type != null) {
+                curl_setopt($this->session, CURLOPT_PROXYTYPE, $this->proxy_type);
+            }
+            if ($this->proxy_username && $this->proxy_password) {
+                curl_setopt($this->session, CURLOPT_PROXYUSERPWD, $this->proxy_username . ':' . $this->proxy_password);
+                if ($this->proxy_auth_type != null) {
+                    curl_setopt($this->session, CURLOPT_PROXYAUTH, $this->proxy_auth_type);
+                }
+            }
+        }
+        
         curl_setopt($this->session, CURLOPT_HEADER, true);
         curl_setopt($this->session, CURLOPT_TIMEOUT, $this->timeout);
         curl_setopt($this->session, CURLOPT_USERAGENT, $this->useragent);
@@ -289,6 +340,11 @@ class CwsCurl
         $this->output('<strong>Authentication (username/password setted) : </strong>' . ($this->username && $this->password ? "true" : "false"), CWSCURL_VERBOSE_SIMPLE);
         $this->output('<strong>Redirect : </strong>' . ($this->redirect ? "true" : "false"), CWSCURL_VERBOSE_SIMPLE);
         $this->output('<strong>Max redirect : </strong>' . $this->max_redirect, CWSCURL_VERBOSE_SIMPLE);
+        $this->output('<strong>Proxy host : </strong>' . $this->proxy_host, CWSCURL_VERBOSE_SIMPLE);
+        $this->output('<strong>Proxy port : </strong>' . $this->proxy_port, CWSCURL_VERBOSE_SIMPLE);
+        $this->output('<strong>Proxy type : </strong>' . $this->proxy_type, CWSCURL_VERBOSE_SIMPLE);
+        $this->output('<strong>Proxy authentication (username/password setted) : </strong>' . ($this->proxy_username && $this->proxy_password ? "true" : "false"), CWSCURL_VERBOSE_SIMPLE);
+        $this->output('<strong>Proxy authentication type : </strong>' . $this->proxy_auth_type, CWSCURL_VERBOSE_SIMPLE);
         
         $response = curl_exec($this->session);
         $this->infos = curl_getinfo($this->session);
@@ -494,6 +550,36 @@ class CwsCurl
     }
     
     /**
+     * Set a HTTP proxy to tunnel requests through.
+     * @param string $host
+     * @param int $port
+     * @param int $type
+     */
+    public function setProxy($host, $port, $type=CURLPROXY_HTTP)
+    {
+        if (!empty($host) && !empty($port)) {
+            $this->proxy_host = stripslashes(trim($host));
+            $this->proxy_port = intval($port);
+            $this->proxy_type = intval($type);
+        }
+    }
+    
+    /**
+     * Set a HTTP proxy authentication.
+     * @param string $username
+     * @param string $password
+     * @param int $auth
+     */
+    public function setProxyAuth($username, $password, $auth_type=CURLAUTH_BASIC)
+    {
+        if (!empty($username) && !empty($password)) {
+            $this->proxy_username = stripslashes(trim($username));
+            $this->proxy_password = stripslashes(trim($password));
+            $this->proxy_auth_type = intval($auth_type);
+        }
+    }
+    
+    /**
      * Auto-generated getters and setters
      */
     
@@ -573,6 +659,36 @@ class CwsCurl
     public function getRedirect()
     {
         return $this->redirect;
+    }
+    
+    public function getProxyHost()
+    {
+        return $this->proxy_host;
+    }
+    
+    public function getProxyPort()
+    {
+        return $this->proxy_port;
+    }
+    
+    public function getProxyType()
+    {
+        return $this->proxy_type;
+    }
+    
+    public function getProxyAuthType()
+    {
+        return $this->proxy_auth_type;
+    }
+    
+    public function getProxyUsername()
+    {
+        return $this->proxy_username;
+    }
+    
+    public function getProxyPassword()
+    {
+        return $this->proxy_password;
     }
     
     public function setRedirect($redirect)
