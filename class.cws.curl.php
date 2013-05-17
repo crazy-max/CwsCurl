@@ -73,6 +73,12 @@ class CwsCurl
     private $params;
     
     /**
+     * List of options for the cURL transfer.
+     * @var array
+     */
+    private $options;
+    
+    /**
      * The maximum number of seconds to allow cURL functions to execute.
      * default 10
      * @var int
@@ -331,6 +337,12 @@ class CwsCurl
         curl_setopt($this->session, CURLOPT_ENCODING, 'gzip');
         curl_setopt($this->session, CURLINFO_HEADER_OUT, true);
         
+        if (is_array($this->options) && count($this->options) > 0) {
+            foreach ($this->options as $option => $value) {
+                curl_setopt($this->session, $option, $value);
+            }
+        }
+        
         $this->output('<strong>URL : </strong>' . $this->url, CWSCURL_VERBOSE_SIMPLE);
         $this->output('<strong>Method : </strong>' . $this->method, CWSCURL_VERBOSE_SIMPLE);
         $this->output('<strong>Params : </strong>' . $data, CWSCURL_VERBOSE_SIMPLE);
@@ -534,6 +546,17 @@ class CwsCurl
         if (!empty($name) && !empty($value)) {
             $this->params[stripslashes(trim($name))] = stripslashes(trim($value));
         }
+    }
+    
+    /**
+     * Add an option for the cURL transfer.
+     * List of options : http://php.net/manual/en/function.curl-setopt.php
+     * @param int $option : The CURLOPT_XXX option to set.
+     * @param mixed $value : The value to be set on option.
+     */
+    public function addOption($option, $value)
+    {
+        $this->options[$option] = $value;
     }
     
     /**

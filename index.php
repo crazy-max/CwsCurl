@@ -8,6 +8,8 @@ $cwsCurl->setUrl("http://www.google.com");                      // The URL to fe
 $cwsCurl->setMethod(CWSCURL_METHOD_GET);                        // HTTP request method ; default CWSCURL_METHOD_GET
 //$cwsCurl->addParam("name", "value");                          // Add custom parameters.
 //$cwsCurl->addParam("name2", "value2");
+//$cwsCurl->addOption(CURLOPT_SSL_VERIFYPEER, true);            // Add an option for the cURL transfer.
+//$cwsCurl->addOption(CURLOPT_ENCODING, "identity");
 $cwsCurl->setTimeout(10);                                       // The maximum number of seconds to allow cURL functions to execute ; default 10
 //$cwsCurl->setReferer("http://www.example.com");               // The contents of the "Referer: " header
 $cwsCurl->setUserAgent(CWSCURL_UA_FIREFOX);                     // The contents of the "User-Agent: " header ; default CWSCURL_UA_FIREFOX
