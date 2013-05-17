@@ -59,3 +59,8 @@ Methods
 **getInfos** - The cURL information regarding the transfer.<br />
 **getHeaderFulltext** - The header fulltext response.<br />
 **getHeaders** - The headers response.<br />
+
+More infos
+----------
+
+http://www.crazyws.fr/dev/classes-php/cwscurl-une-classe-wrapper-pour-extension-curl-php-KLV4G.html
