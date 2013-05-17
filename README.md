@@ -46,6 +46,7 @@ Methods
 **setUrl** - The URL to fetch.<br />
 **setMethod** - HTTP request method. (can be CWSCURL_METHOD_DELETE ; CWSCURL_METHOD_GET ; CWSCURL_METHOD_HEAD ; CWSCURL_METHOD_POST ; CWSCURL_METHOD_PUT)<br />
 **addParam** - Add custom parameters to the cURL request.<br />
+**addOption** - Add an option for the cURL transfer.<br />
 **setTimeout** - The maximum number of seconds to allow cURL functions to execute.<br />
 **setReferer** - The contents of the "Referer: " header to be used in a HTTP request.<br />
 **setUserAgent** - The contents of the "User-Agent: " header to be used in a HTTP request. (can be CWSCURL_UA_CHROME ; CWSCURL_UA_FIREFOX ; CWSCURL_UA_GOOGLEBOT ; CWSCURL_UA_IE ; CWSCURL_UA_OPERA)<br />

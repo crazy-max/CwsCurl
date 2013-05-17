@@ -23,7 +23,7 @@
  * @author Cr@zy
  * @copyright 2013, Cr@zy
  * @license GPL licensed
- * @version 1.0
+ * @version 1.1
  * @link https://github.com/crazy-max/CwsCurl
  *
  */
@@ -51,7 +51,7 @@ class CwsCurl
      * CwsCurl version.
      * @var string
      */
-    private $version = "1.0";
+    private $version = "1.1";
     
     /**
      * The URL to fetch.
