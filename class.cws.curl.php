@@ -449,8 +449,7 @@ class CwsCurl
                 $host = parse_url($this->url);
                 $host = $host['host'];
                 
-                $this->error_msg = "cURL error " . $errno
-                        . " : Could not resolve hostname " . $host . "...";
+                $this->error_msg = "cURL error " . $errno . " : Could not resolve hostname " . $host . "...";
                 $this->output();
                 return;
             } elseif ($errno == CURLE_HTTP_NOT_FOUND) {
