@@ -331,8 +331,6 @@ class CwsCurl
         curl_setopt($this->session, CURLOPT_REFERER, $this->referer);
         curl_setopt($this->session, CURLOPT_VERBOSE, false);
         curl_setopt($this->session, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($this->session, CURLOPT_FOLLOWLOCATION, $this->redirect);
-        curl_setopt($this->session, CURLOPT_MAXREDIRS, $this->max_redirect);
         curl_setopt($this->session, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($this->session, CURLOPT_ENCODING, 'gzip');
         curl_setopt($this->session, CURLINFO_HEADER_OUT, true);
@@ -341,6 +339,21 @@ class CwsCurl
             foreach ($this->options as $option => $value) {
                 curl_setopt($this->session, $option, $value);
             }
+        }
+        
+        $redirectCount = 0;
+        if (ini_get('open_basedir') == '' && !ini_get('safe_mode')) {
+            curl_setopt($this->session, CURLOPT_FOLLOWLOCATION, $this->redirect);
+            curl_setopt($this->session, CURLOPT_MAXREDIRS, $this->max_redirect);
+        } else {
+            curl_setopt($this->session, CURLOPT_FOLLOWLOCATION, false);
+            $redirectCount = $this->follow();
+        }
+        
+        $response = curl_exec($this->session);
+        $this->infos = curl_getinfo($this->session);
+        if ($redirectCount > 0) {
+            $this->infos['redirect_count'] = $redirectCount;
         }
         
         $this->output('<strong>URL : </strong>' . $this->url, CWSCURL_VERBOSE_SIMPLE);
@@ -358,17 +371,21 @@ class CwsCurl
         $this->output('<strong>Proxy authentication (username/password setted) : </strong>' . ($this->proxy_username && $this->proxy_password ? "true" : "false"), CWSCURL_VERBOSE_SIMPLE);
         $this->output('<strong>Proxy authentication type : </strong>' . $this->proxy_auth_type, CWSCURL_VERBOSE_SIMPLE);
         
-        $response = curl_exec($this->session);
-        $this->infos = curl_getinfo($this->session);
+        if ($response != null) {
+            $response = $this->parseResponse($response, $this->infos);
+            $this->header_fulltext = $response['header_fulltext'];
+            $this->headers = $response['headers'];
+            $this->status = $response['status'];
+            $this->content = $response['content'];
+        }
         
-        $this->parseHeaders($response);
         $this->parseError(curl_errno($this->session), curl_error($this->session));
         
         $this->output('<h3>infos</h3>', CWSCURL_VERBOSE_REPORT, false);
         $this->output($this->infos, CWSCURL_VERBOSE_REPORT, false, true);
         
         $this->output('<h3>HTTP status code</h3>', CWSCURL_VERBOSE_DEBUG, false);
-        $this->output($this->status, CWSCURL_VERBOSE_DEBUG, false);
+        $this->output('Code : ' . $this->status, CWSCURL_VERBOSE_DEBUG, false);
         
         $this->output('<h3>content</h3>', CWSCURL_VERBOSE_REPORT, false);
         $this->output('Size : ' . strlen($this->content), CWSCURL_VERBOSE_REPORT, false);
@@ -383,31 +400,89 @@ class CwsCurl
     }
     
     /**
-     * Parse the headers.
-     * @param string $response : the cURL response
+     * Redirection workaround
+     * See http://www.php.net/manual/ro/function.curl-setopt.php#102121 for more infos.
+     * @return int : redirect count
      */
-    private function parseHeaders($response)
+    private function follow()
     {
-        $this->header_fulltext = '';
-        $length = isset($this->infos['header_size']) ? $this->infos['header_size'] : 0;
+        $status = 0;
+        $redirectCount = 0;
+        $newurl = $this->url;
+        $max_redirect = $this->max_redirect;
+        
+        $session = curl_copy_handle($this->session);
+        curl_setopt($session, CURLOPT_HEADER, true);
+        curl_setopt($session, CURLOPT_NOBODY, true);
+        curl_setopt($session, CURLOPT_FORBID_REUSE, false);
+        
+        do {
+            curl_setopt($session, CURLOPT_URL, $newurl);
+            
+            $response = curl_exec($session);
+            $infos = curl_getinfo($session);
+            
+            $this->parseError(curl_errno($session), curl_error($session));
+            
+            if (empty($this->error_msg)) {
+                $response = $this->parseResponse($response, $infos);
+                $status = $response['status'];
+                if (($status == 301 || $status == 302) && isset($response['headers']['location'])) {
+                    $redirectCount++;
+                    $newurl = $response['headers']['location'];
+                    if (!preg_match("#^https?:#i", $newurl)) {
+                        $newurl = $this->url . $newurl;
+                    }
+                }
+            }
+            $max_redirect--;
+        } while ($status != 200 && $max_redirect > 0);
+        
+        curl_close($session);
+        
+        if ($max_redirect == 0 && ($status == 0 || $status == 301 || $status == 302)) {
+            $this->error_msg = "Too many redirects...";
+            $this->output();
+            return false;
+        }
+        
+        curl_setopt($this->session, CURLOPT_URL, $newurl);
+        
+        return $redirectCount;
+    }
+    
+    /**
+     * Parse the response.
+     * @param string $response : the cURL response
+     * @param array $infos : The cURL information regarding the transfer
+     * @return array : header_fulltext, headers, status and content
+     */
+    private function parseResponse($response, $infos)
+    {
+        $result = array(
+            'header_fulltext' => '',
+            'headers'         => array(),
+            'status'          => 0,
+            'content'         => '',
+        );
+        
+        $length = isset($infos['header_size']) ? $infos['header_size'] : 0;
         
         if (!empty($response) && $length > 0) {
-            $this->content = substr($response, $length, strlen($response));
+            $result['content'] = substr($response, $length, strlen($response));
             $tmp = explode("\r\n\r\n", substr($response, 0, $length));
             if (!empty($tmp)) {
                 foreach ($tmp as $string) {
                     if (!empty($string)) {
-                        $this->header_fulltext = $string;
+                        $result['header_fulltext'] = str_replace("\r\n", "\n", $string);
                     }
                 }
             }
-            if (!empty($this->header_fulltext)) {
-                $headers = explode("\r\n", $this->header_fulltext);
-                $this->headers = array();
-                
-                if ($this->status == 0) {
+            if (!empty($result['header_fulltext'])) {
+                $headers = explode("\n", $result['header_fulltext']);
+                if ($result['status'] == 0) {
                     if (preg_match_all('|HTTP/\d\.\d\s+(\d+)\s+.*|i', $headers[0], $matches) && isset($matches[1]) && isset($matches[1][0]) && is_numeric($matches[1][0])) {
-                        $this->status = intval($matches[1][0]);
+                        $result['status'] = intval($matches[1][0]);
                         array_shift($headers);
                     } else {
                         $this->error_msg = "Unexpected HTTP response status...";
@@ -420,18 +495,18 @@ class CwsCurl
                     $name = strtolower($this->tokenize($header, ':'));
                     $value = trim(chop($this->tokenize("\r\n")));
                     
-                    if (isset($this->headers[$name])) {
-                        if (gettype($this->headers[$name]) == "string") {
-                            $this->headers[$name] = array($this->headers[$name]);
+                    if (isset($result['headers'][$name])) {
+                        if (gettype($result['headers'][$name]) == "string") {
+                            $result['headers'][$name] = array($result['headers'][$name]);
                         }
-                        $this->headers[$name][] = $value;
+                        $result['headers'][$name][] = $value;
                     } else {
-                        $this->headers[$name] = $value;
+                        $result['headers'][$name] = $value;
                     }
                 }
             }
             
-            $this->header_fulltext = str_replace("\r\n", "\n", $this->header_fulltext);
+            return $result;
         }
     }
     
@@ -439,8 +514,9 @@ class CwsCurl
      * Parse cURL and HTTP errors.
      * @param int $errno : the error number
      * @param string $error : a clear text error message
+     * @param boolean $output : output error
      */
-    private function parseError($errno, $error)
+    private function parseError($errno, $error, $output=true)
     {
         $this->error_msg = '';
         if ($errno > 0) {
@@ -502,7 +578,7 @@ class CwsCurl
             $this->error_msg .= $this->_newline . $this->_newline . $this->header_fulltext;
         }
         
-        if (!empty($this->error_msg)) {
+        if (!empty($this->error_msg) && $output) {
             $this->output();
         }
     }
