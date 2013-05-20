@@ -19,7 +19,7 @@ Getting started
 include('class.cws.curl.php');
 
 $cwsCurl = new CwsCurl();
-$cwsCurl->setDebugVerbose(CWSCURL_VERBOSE_DEBUG);               // default : CWSCURL_VERBOSE_SIMPLE
+$cwsCurl->setDebugVerbose(CWSCURL_VERBOSE_DEBUG);               // default : CWSCURL_VERBOSE_QUIET
 $cwsCurl->setUrl("http://www.google.com");                      // The URL to fetch
 $cwsCurl->setMethod(CWSCURL_METHOD_GET);                        // HTTP request method ; default CWSCURL_METHOD_GET
 //$cwsCurl->addParam("name", "value");                          // Add custom parameters.
