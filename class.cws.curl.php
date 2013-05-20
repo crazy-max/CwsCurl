@@ -23,7 +23,7 @@
  * @author Cr@zy
  * @copyright 2013, Cr@zy
  * @license GPL licensed
- * @version 1.2
+ * @version 1.3
  * @link https://github.com/crazy-max/CwsCurl
  *
  */
@@ -51,7 +51,7 @@ class CwsCurl
      * CwsCurl version.
      * @var string
      */
-    private $version = "1.2";
+    private $version = "1.3";
     
     /**
      * The URL to fetch.
@@ -199,10 +199,10 @@ class CwsCurl
     
     /**
      * Control the debug output.
-     * default CWSCURL_VERBOSE_SIMPLE
+     * default CWSCURL_VERBOSE_QUIET
      * @var int
      */
-    private $debug_verbose = CWSCURL_VERBOSE_SIMPLE;
+    private $debug_verbose = CWSCURL_VERBOSE_QUIET;
     
     /**
      * The last error message.
