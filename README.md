@@ -1,17 +1,14 @@
-CwsCurl
-=======
+# CwsCurl
 
 CwsCurl is a flexible wrapper PHP class for the cURL extension.
 
-Installation
-------------
+## Installation
 
 * Enable the [php_curl](http://php.net/manual/en/book.curl.php) extension.
 * Copy the ``class.cws.curl.php`` file in a folder on your server.
 * Go to ``index.php`` to see an example.
 
-Getting started
----------------
+## Getting started
 
 ```php
 <?php
@@ -41,8 +38,7 @@ $cwsCurl->process();
 ?>
 ```
 
-Methods
--------
+## Methods
 
 **setDebugVerbose** - Control the debug output.<br />
 **setUrl** - The URL to fetch.<br />
@@ -67,7 +63,10 @@ Methods
 **getHeaderFulltext** - The header fulltext response.<br />
 **getHeaders** - The headers response.<br />
 
-More infos
-----------
+## License
+
+LGPL. See ``LICENSE`` for more details.
+
+## More infos
 
 http://www.crazyws.fr/dev/classes-php/cwscurl-une-classe-wrapper-pour-extension-curl-php-KLV4G.html
