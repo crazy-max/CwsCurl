@@ -22,37 +22,26 @@
  * 
  * @package CwsCurl
  * @author Cr@zy
- * @copyright 2013-2014, Cr@zy
+ * @copyright 2013-2015, Cr@zy
  * @license GNU LESSER GENERAL PUBLIC LICENSE
- * @version 1.4
+ * @version 1.5
  * @link https://github.com/crazy-max/CwsCurl
  *
  */
 
-define('CWSCURL_VERBOSE_QUIET',     0); // means no output at all.
-define('CWSCURL_VERBOSE_SIMPLE',    1); // means only output simple report.
-define('CWSCURL_VERBOSE_REPORT',    2); // means output a detail report.
-define('CWSCURL_VERBOSE_DEBUG',     3); // means output detail report as well as debug info.
-
-define('CWSCURL_METHOD_DELETE',     'DELETE');
-define('CWSCURL_METHOD_GET',        'GET');
-define('CWSCURL_METHOD_HEAD',       'HEAD');
-define('CWSCURL_METHOD_POST',       'POST');
-define('CWSCURL_METHOD_PUT',        'PUT');
-
-define('CWSCURL_UA_CHROME',         'Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.2 (KHTML, like Gecko) Chrome/15.0.872.0 Safari/535.2');
-define('CWSCURL_UA_FIREFOX',        'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.6) Gecko/20070725 Firefox/2.0.0.9');
-define('CWSCURL_UA_GOOGLEBOT',      'Googlebot/2.1 ( http://www.googlebot.com/bot.html)');
-define('CWSCURL_UA_IE',             'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)');
-define('CWSCURL_UA_OPERA',          'Opera/9.80 (Windows NT 6.1; U; en-US) Presto/2.9.181 Version/12.00');
-
 class CwsCurl
 {
-    /**
-     * CwsCurl version.
-     * @var string
-     */
-    private $version = "1.4";
+    const METHOD_DELETE = 'DELETE';
+    const METHOD_GET = 'GET';
+    const METHOD_HEAD = 'HEAD';
+    const METHOD_POST = 'POST';
+    const METHOD_PUT = 'PUT';
+    
+    const UA_CHROME = 'Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.2 (KHTML, like Gecko) Chrome/15.0.872.0 Safari/535.2';
+    const UA_FIREFOX = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.6) Gecko/20070725 Firefox/2.0.0.9';
+    const UA_GOOGLEBOT = 'Googlebot/2.1 ( http://www.googlebot.com/bot.html)';
+    const UA_IE = 'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)';
+    const UA_OPERA = 'Opera/9.80 (Windows NT 6.1; U; en-US) Presto/2.9.181 Version/12.00';
     
     /**
      * The URL to fetch.
@@ -62,10 +51,10 @@ class CwsCurl
     
     /**
      * HTTP request method.
-     * default CWSCURL_METHOD_GET
+     * default METHOD_GET
      * @var string
      */
-    private $method = CWSCURL_METHOD_GET;
+    private $method;
     
     /**
      * Query string parameters.
@@ -94,10 +83,10 @@ class CwsCurl
     
     /**
      * The contents of the "User-Agent: " header to be used in a HTTP request.
-     * default CWSCURL_UA_FIREFOX
+     * default UA_FIREFOX
      * @var string
      */
-    private $useragent = CWSCURL_UA_FIREFOX;
+    private $useragent;
     
     /**
      * The username for the CURLOPT_USERPWD option.
@@ -123,44 +112,44 @@ class CwsCurl
      * default 3
      * @var int
      */
-    private $max_redirect = 3;
+    private $maxRedirect = 3;
     
     /**
-     * The hosqt IP of the proxy to connect to.
+     * The host IP of the proxy to connect to.
      * @var string
      */
-    private $proxy_host;
+    private $proxyHost;
     
     /**
      * The port number of the proxy to connect to.
      * @var int
      */
-    private $proxy_port;
+    private $proxyPort;
     
     /**
      * The proxy type CURLPROXY_HTTP, CURLPROXY_SOCKS4 or CURLPROXY_SOCKS5.
      * @var int
      */
-    private $proxy_type;
+    private $proxyType;
     
     /**
      * The HTTP authentication method(s) to use for the proxy connection.
      * Can be CURLAUTH_BASIC or CURLAUTH_NTLM.
      * @var int
      */
-    private $proxy_auth_type;
+    private $proxyAuthType;
     
     /**
      * The username for the CURLOPT_PROXYUSERPWD option.
      * @var string
      */
-    private $proxy_username;
+    private $proxyUsername;
     
     /**
-     * The password associated to the proxy_username for the CURLOPT_PROXYUSERPWD option.
+     * The password associated to the proxyUsername for the CURLOPT_PROXYUSERPWD option.
      * @var string
      */
-    private $proxy_password;
+    private $proxyPassword;
     
     /**
      * The cURL session.
@@ -190,7 +179,7 @@ class CwsCurl
      * The header fulltext response.
      * @var string
      */
-    private $header_fulltext;
+    private $headerFulltext;
     
     /**
      * The headers response.
@@ -199,54 +188,33 @@ class CwsCurl
     private $headers;
     
     /**
-     * Control the debug output.
-     * default CWSCURL_VERBOSE_QUIET
-     * @var int
+     * A temporary token for headers parsing.
+     * @var array
      */
-    private $debug_verbose = CWSCURL_VERBOSE_QUIET;
+    private $headerNextToken;
     
     /**
      * The last error message.
      * @var string
      */
-    private $error_msg;
+    private $error;
     
     /**
-     * A temporary token for headers parsing.
-     * @var array
+     * The cws debug instance.
+     * @var CwsDebug
      */
-    private $_next_token;
+    private $cwsDebug;
     
-    /**
-     * Defines new line ending.
-     * @var string
-     */
-    private $_newline = "<br />\n";
-    
-    /**
-     * Output additional msg for debug.
-     * @param string $msg : if not given, output the last error msg.
-     * @param int $verbose_level : the output level of this message.
-     * @param boolean $newline : insert new line or not.
-     * @param boolean $code : is code or not.
-     */
-    private function output($msg=false, $verbose_level=CWSCURL_VERBOSE_SIMPLE, $newline=true, $code=false)
+    public function __construct(CwsDebug $cwsDebug)
     {
-        if ($this->debug_verbose >= $verbose_level) {
-            if (empty($msg) && !$code) {
-                echo $this->_newline . '<strong>ERROR :</strong> ' . $this->error_msg;
-            } else {
-                if ($code) {
-                    echo '<textarea style="width:100%;height:300px;">';
-                    print_r($msg);
-                    echo '</textarea>';
-                } else {
-                    echo $msg;
-                }
-            }
-            if ($newline) {
-                echo $this->_newline;
-            }
+        $this->cwsDebug = $cwsDebug;
+        $this->mode = self::METHOD_GET;
+        $this->useragent = self::UA_FIREFOX;
+        
+        if (!in_array('curl', get_loaded_extensions())) {
+            $this->error = 'The cURL extension is not loaded...';
+            $this->cwsDebug->error($this->error);
+            exit();
         }
     }
     
@@ -255,13 +223,7 @@ class CwsCurl
      */
     public function process()
     {
-        $this->output('<h2>process</h2>', CWSCURL_VERBOSE_SIMPLE, false);
-        
-        if (!in_array('curl', get_loaded_extensions())) {
-            $this->error_msg = "The cURL extension is not loaded...";
-            $this->output();
-            exit();
-        }
+        $this->cwsDebug->titleH2('process', CwsDebug::VERBOSE_SIMPLE);
         
         $this->session = curl_init();
         curl_setopt($this->session, CURLOPT_NOBODY, false);
@@ -272,27 +234,27 @@ class CwsCurl
         }
         
         switch ($this->method) {
-            case CWSCURL_METHOD_DELETE:
-                curl_setopt($this->session, CURLOPT_CUSTOMREQUEST, CWSCURL_METHOD_DELETE);
+            case self::METHOD_DELETE:
+                curl_setopt($this->session, CURLOPT_CUSTOMREQUEST, self::METHOD_DELETE);
                 break;
-            case CWSCURL_METHOD_GET:
+            case self::METHOD_GET:
                 if ($data != null) {
                     $this->url = $this->url . '?' . $data;
                 }
                 curl_setopt($this->session, CURLOPT_HTTPGET, true);
                 break;
-            case CWSCURL_METHOD_HEAD:
+            case self::METHOD_HEAD:
                 curl_setopt($this->session, CURLOPT_NOBODY, true);
                break;
-            case CWSCURL_METHOD_POST:
+            case self::METHOD_POST:
                 if ($data !== null) {
                     curl_setopt($this->session, CURLOPT_POST, true);
                     curl_setopt($this->session, CURLOPT_POSTFIELDS, $data);
                 } else {
-                    curl_setopt($this->session, CURLOPT_CUSTOMREQUEST, CWSCURL_METHOD_POST);
+                    curl_setopt($this->session, CURLOPT_CUSTOMREQUEST, self::METHOD_POST);
                 }
                 break;
-            case CWSCURL_METHOD_PUT:
+            case self::METHOD_PUT:
                 if ($data !== null) {
                     $handle = fopen('php://temp', 'rw+');
                     fwrite($handle, $data);
@@ -302,7 +264,7 @@ class CwsCurl
                     curl_setopt($this->session, CURLOPT_INFILESIZE, strlen($data));
                     curl_setopt($this->session, CURLOPT_PUT, true);
                 } else {
-                    curl_setopt($this->session, CURLOPT_CUSTOMREQUEST, CWSCURL_METHOD_PUT);
+                    curl_setopt($this->session, CURLOPT_CUSTOMREQUEST, self::METHOD_PUT);
                 }
                 break;
         }
@@ -311,25 +273,28 @@ class CwsCurl
             curl_setopt($this->session, CURLOPT_USERPWD, $this->username . ':' . $this->password);
         }
         
-        if ($this->proxy_host && $this->proxy_port) {
+        if ($this->proxyHost && $this->proxyPort) {
             curl_setopt($this->session, CURLOPT_HTTPPROXYTUNNEL, true);
-            curl_setopt($this->session, CURLOPT_PROXY, $this->proxy_host . ':' . $this->proxy_port);
-            if ($this->proxy_type != null) {
-                curl_setopt($this->session, CURLOPT_PROXYTYPE, $this->proxy_type);
+            curl_setopt($this->session, CURLOPT_PROXY, $this->proxyHost . ':' . $this->proxyPort);
+            if ($this->proxyType != null) {
+                curl_setopt($this->session, CURLOPT_PROXYTYPE, $this->proxyType);
             }
-            if ($this->proxy_username && $this->proxy_password) {
-                curl_setopt($this->session, CURLOPT_PROXYUSERPWD, $this->proxy_username . ':' . $this->proxy_password);
-                if ($this->proxy_auth_type != null) {
-                    curl_setopt($this->session, CURLOPT_PROXYAUTH, $this->proxy_auth_type);
+            if ($this->proxyUsername && $this->proxyPassword) {
+                curl_setopt($this->session, CURLOPT_PROXYUSERPWD, $this->proxyUsername . ':' . $this->proxyPassword);
+                if ($this->proxyAuthType != null) {
+                    curl_setopt($this->session, CURLOPT_PROXYAUTH, $this->proxyAuthType);
                 }
             }
+        }
+        
+        if (!empty($this->referer)) {
+            curl_setopt($this->session, CURLOPT_REFERER, $this->referer);
         }
         
         curl_setopt($this->session, CURLOPT_HEADER, true);
         curl_setopt($this->session, CURLOPT_TIMEOUT, $this->timeout);
         curl_setopt($this->session, CURLOPT_USERAGENT, $this->useragent);
         curl_setopt($this->session, CURLOPT_URL, $this->url);
-        curl_setopt($this->session, CURLOPT_REFERER, $this->referer);
         curl_setopt($this->session, CURLOPT_VERBOSE, false);
         curl_setopt($this->session, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($this->session, CURLOPT_RETURNTRANSFER, true);
@@ -345,7 +310,7 @@ class CwsCurl
         $redirectCount = 0;
         if (ini_get('open_basedir') == '' && !ini_get('safe_mode')) {
             curl_setopt($this->session, CURLOPT_FOLLOWLOCATION, $this->redirect);
-            curl_setopt($this->session, CURLOPT_MAXREDIRS, $this->max_redirect);
+            curl_setopt($this->session, CURLOPT_MAXREDIRS, $this->maxRedirect);
         } else {
             curl_setopt($this->session, CURLOPT_FOLLOWLOCATION, false);
             $redirectCount = $this->follow();
@@ -357,24 +322,24 @@ class CwsCurl
             $this->infos['redirect_count'] = $redirectCount;
         }
         
-        $this->output('<strong>URL : </strong>' . $this->url, CWSCURL_VERBOSE_SIMPLE);
-        $this->output('<strong>Method : </strong>' . $this->method, CWSCURL_VERBOSE_SIMPLE);
-        $this->output('<strong>Params : </strong>' . $data, CWSCURL_VERBOSE_SIMPLE);
-        $this->output('<strong>Timeout : </strong>' . $this->timeout, CWSCURL_VERBOSE_SIMPLE);
-        $this->output('<strong>Referer : </strong>' . $this->referer, CWSCURL_VERBOSE_SIMPLE);
-        $this->output('<strong>User agent : </strong>' . $this->useragent, CWSCURL_VERBOSE_SIMPLE);
-        $this->output('<strong>Authentication (username/password setted) : </strong>' . ($this->username && $this->password ? "true" : "false"), CWSCURL_VERBOSE_SIMPLE);
-        $this->output('<strong>Redirect : </strong>' . ($this->redirect ? "true" : "false"), CWSCURL_VERBOSE_SIMPLE);
-        $this->output('<strong>Max redirect : </strong>' . $this->max_redirect, CWSCURL_VERBOSE_SIMPLE);
-        $this->output('<strong>Proxy host : </strong>' . $this->proxy_host, CWSCURL_VERBOSE_SIMPLE);
-        $this->output('<strong>Proxy port : </strong>' . $this->proxy_port, CWSCURL_VERBOSE_SIMPLE);
-        $this->output('<strong>Proxy type : </strong>' . $this->proxy_type, CWSCURL_VERBOSE_SIMPLE);
-        $this->output('<strong>Proxy authentication (username/password setted) : </strong>' . ($this->proxy_username && $this->proxy_password ? "true" : "false"), CWSCURL_VERBOSE_SIMPLE);
-        $this->output('<strong>Proxy authentication type : </strong>' . $this->proxy_auth_type, CWSCURL_VERBOSE_SIMPLE);
+        $this->cwsDebug->labelValue('URL', $this->url, CwsDebug::VERBOSE_SIMPLE);
+        $this->cwsDebug->labelValue('Method', $this->method, CwsDebug::VERBOSE_SIMPLE);
+        $this->cwsDebug->labelValue('Params', $data, CwsDebug::VERBOSE_SIMPLE);
+        $this->cwsDebug->labelValue('Timeout', $this->timeout, CwsDebug::VERBOSE_SIMPLE);
+        $this->cwsDebug->labelValue('Referer', $this->referer, CwsDebug::VERBOSE_SIMPLE);
+        $this->cwsDebug->labelValue('User agent', $this->useragent, CwsDebug::VERBOSE_SIMPLE);
+        $this->cwsDebug->labelValue('Authentication (username/password setted)', ($this->username && $this->password ? 'true' : 'false'), CwsDebug::VERBOSE_SIMPLE);
+        $this->cwsDebug->labelValue('Redirect', ($this->redirect ? 'true' : 'false'), CwsDebug::VERBOSE_SIMPLE);
+        $this->cwsDebug->labelValue('Max redirect', $this->maxRedirect, CwsDebug::VERBOSE_SIMPLE);
+        $this->cwsDebug->labelValue('Proxy host', $this->proxyHost, CwsDebug::VERBOSE_SIMPLE);
+        $this->cwsDebug->labelValue('Proxy port', $this->proxyPort, CwsDebug::VERBOSE_SIMPLE);
+        $this->cwsDebug->labelValue('Proxy type', $this->proxyType, CwsDebug::VERBOSE_SIMPLE);
+        $this->cwsDebug->labelValue('Proxy authentication (username/password setted)', ($this->proxyUsername && $this->proxyPassword ? 'true' : 'false'), CwsDebug::VERBOSE_SIMPLE);
+        $this->cwsDebug->labelValue('Proxy authentication type', $this->proxyAuthType, CwsDebug::VERBOSE_SIMPLE);
         
         if ($response != null) {
             $response = $this->parseResponse($response, $this->infos);
-            $this->header_fulltext = $response['header_fulltext'];
+            $this->headerFulltext = $response['headerFulltext'];
             $this->headers = $response['headers'];
             $this->status = $response['status'];
             $this->content = $response['content'];
@@ -382,20 +347,12 @@ class CwsCurl
         
         $this->parseError(curl_errno($this->session), curl_error($this->session));
         
-        $this->output('<h3>infos</h3>', CWSCURL_VERBOSE_REPORT, false);
-        $this->output($this->infos, CWSCURL_VERBOSE_REPORT, false, true);
+        $this->cwsDebug->labelValue('HTTP status code', $this->status, CwsDebug::VERBOSE_DEBUG);
+        $this->cwsDebug->labelValue('Content size', strlen($this->content), CwsDebug::VERBOSE_REPORT);
         
-        $this->output('<h3>HTTP status code</h3>', CWSCURL_VERBOSE_DEBUG, false);
-        $this->output('Code : ' . $this->status, CWSCURL_VERBOSE_DEBUG, false);
-        
-        $this->output('<h3>content</h3>', CWSCURL_VERBOSE_REPORT, false);
-        $this->output('Size : ' . strlen($this->content), CWSCURL_VERBOSE_REPORT, false);
-        
-        $this->output('<h3>header fulltext</h3>', CWSCURL_VERBOSE_DEBUG, false);
-        $this->output($this->header_fulltext, CWSCURL_VERBOSE_DEBUG, false, true);
-        
-        $this->output('<h3>headers</h3>', CWSCURL_VERBOSE_DEBUG, false);
-        $this->output($this->headers, CWSCURL_VERBOSE_DEBUG, false, true);
+        $this->cwsDebug->dump('Infos', $this->infos, CwsDebug::VERBOSE_REPORT);
+        $this->cwsDebug->dump('Header fulltext', $this->headerFulltext, CwsDebug::VERBOSE_DEBUG);
+        $this->cwsDebug->dump('Headers', $this->headers, CwsDebug::VERBOSE_DEBUG);
         
         curl_close($this->session);
     }
@@ -410,7 +367,7 @@ class CwsCurl
         $status = 0;
         $redirectCount = 0;
         $newurl = $this->url;
-        $max_redirect = $this->max_redirect;
+        $maxRedirect = $this->maxRedirect;
         
         $session = curl_copy_handle($this->session);
         curl_setopt($session, CURLOPT_HEADER, true);
@@ -425,7 +382,7 @@ class CwsCurl
             
             $this->parseError(curl_errno($session), curl_error($session));
             
-            if (empty($this->error_msg)) {
+            if (empty($this->error)) {
                 $response = $this->parseResponse($response, $infos);
                 $status = $response['status'];
                 if (($status == 301 || $status == 302) && isset($response['headers']['location'])) {
@@ -436,14 +393,15 @@ class CwsCurl
                     }
                 }
             }
-            $max_redirect--;
-        } while ($status != 200 && $max_redirect > 0);
+            
+            $maxRedirect--;
+        } while ($status != 200 && $maxRedirect > 0);
         
         curl_close($session);
         
-        if ($max_redirect == 0 && ($status == 0 || $status == 301 || $status == 302)) {
-            $this->error_msg = "Too many redirects...";
-            $this->output();
+        if ($maxRedirect == 0 && ($status == 0 || $status == 301 || $status == 302)) {
+            $this->error = 'Too many redirects...';
+            $this->cwsDebug->error($this->error);
             return false;
         }
         
@@ -456,15 +414,15 @@ class CwsCurl
      * Parse the response.
      * @param string $response : the cURL response
      * @param array $infos : The cURL information regarding the transfer
-     * @return array : header_fulltext, headers, status and content
+     * @return array : headerFulltext, headers, status and content
      */
     private function parseResponse($response, $infos)
     {
         $result = array(
-            'header_fulltext' => '',
-            'headers'         => array(),
-            'status'          => 0,
-            'content'         => '',
+            'headerFulltext' => '',
+            'headers' => array(),
+            'status' => 0,
+            'content' => '',
         );
         
         $length = isset($infos['header_size']) ? $infos['header_size'] : 0;
@@ -475,19 +433,19 @@ class CwsCurl
             if (!empty($tmp)) {
                 foreach ($tmp as $string) {
                     if (!empty($string)) {
-                        $result['header_fulltext'] = str_replace("\r\n", "\n", $string);
+                        $result['headerFulltext'] = str_replace("\r\n", "\n", $string);
                     }
                 }
             }
-            if (!empty($result['header_fulltext'])) {
-                $headers = explode("\n", $result['header_fulltext']);
+            if (!empty($result['headerFulltext'])) {
+                $headers = explode("\n", $result['headerFulltext']);
                 if ($result['status'] == 0) {
                     if (preg_match_all('|HTTP/\d\.\d\s+(\d+)\s+.*|i', $headers[0], $matches) && isset($matches[1]) && isset($matches[1][0]) && is_numeric($matches[1][0])) {
                         $result['status'] = intval($matches[1][0]);
                         array_shift($headers);
                     } else {
-                        $this->error_msg = "Unexpected HTTP response status...";
-                        $this->output();
+                        $this->error = 'Unexpected HTTP response status...';
+                        $this->cwsDebug->error($this->error);
                         return;
                     }
                 }
@@ -497,7 +455,7 @@ class CwsCurl
                     $value = trim(chop($this->tokenize("\r\n")));
                     
                     if (isset($result['headers'][$name])) {
-                        if (gettype($result['headers'][$name]) == "string") {
+                        if (gettype($result['headers'][$name]) == 'string') {
                             $result['headers'][$name] = array($result['headers'][$name]);
                         }
                         $result['headers'][$name][] = $value;
@@ -515,72 +473,64 @@ class CwsCurl
      * Parse cURL and HTTP errors.
      * @param int $errno : the error number
      * @param string $error : a clear text error message
-     * @param boolean $output : output error
      */
-    private function parseError($errno, $error, $output=true)
+    private function parseError($errno, $error)
     {
-        $this->error_msg = '';
+        $this->error = '';
+        
         if ($errno > 0) {
             // More info: http://php.net/manual/en/function.curl-errno.php
             if ($errno == CURLE_COULDNT_RESOLVE_HOST) {
                 $host = parse_url($this->url);
                 $host = $host['host'];
                 
-                $this->error_msg = "cURL error " . $errno . " : Could not resolve hostname " . $host . "...";
-                $this->output();
+                $this->error = 'cURL error ' . $errno . ' : Could not resolve hostname ' . $host . '...';
+                $this->cwsDebug->error($this->error);
                 return;
             } elseif ($errno == CURLE_HTTP_NOT_FOUND) {
-                $this->error_msg = "cURL error " . $errno . " : HTTP error " . $this->status . "...";
+                $this->error = 'cURL error ' . $errno . ' : HTTP error ' . $this->status . '...';
                 if ($this->status == 406) {
-                    $this->error_msg .= " URL does not allow access to its content...";
+                    $this->error .= ' URL does not allow access to its content...';
                 }
-                $this->output();
+                $this->cwsDebug->error($this->error);
                 return;
             } elseif ($errno == CURLE_COULDNT_CONNECT) {
-                $this->error_msg = "cURL error " . $errno . " : Connection failed to the URL...";
-                $this->output();
+                $this->error = 'cURL error ' . $errno . ' : Connection failed to the URL...';
+                $this->cwsDebug->error($this->error);
                 return;
             } elseif ($errno == CURLE_OPERATION_TIMEOUTED) {
-                $this->error_msg = "cURL error " . $errno . " : Access to the URL exceeded time...";
-                $this->output();
+                $this->error = 'cURL error ' . $errno . ' : Access to the URL exceeded time...';
+                $this->cwsDebug->error($this->error);
                 return;
             } else {
-                $this->error_msg = "cURL error " . $errno;
-                $this->output();
+                $this->error = 'cURL error ' . $errno;
+                $this->cwsDebug->error($this->error);
                 return;
             }
         } elseif (!empty($error)) {
-            $this->error_msg = "cURL error : " . $error;
-            $this->output();
+            $this->error = 'cURL error : ' . $error;
+            $this->cwsDebug->error($this->error);
             return;
         } elseif ($this->status == 400) {
-            $this->error_msg = "HTTP error " . $this->status . " Bad request : The request contains bad syntax or can not be transmitted.";
-            $this->output();
+            $this->error = 'HTTP error ' . $this->status . ' Bad request : The request contains bad syntax or can not be transmitted.';
+            $this->cwsDebug->error($this->error);
             return;
         } elseif ($this->status == 401) {
-            $this->error_msg = "HTTP error " . $this->status . " Not allowed : The request requires authentication. Authentication failed or have not yet been accomplished.";
-            $this->output();
+            $this->error = 'HTTP error ' . $this->status . ' Not allowed : The request requires authentication. Authentication failed or have not yet been accomplished.';
+            $this->cwsDebug->error($this->error);
             return;
         } elseif ($this->status == 403) {
-            $this->error_msg = "HTTP error " . $this->status . " Access denied : The server refuses to grant the resource.";
-            $this->output();
+            $this->error = 'HTTP error ' . $this->status . ' Access denied : The server refuses to grant the resource.';
+            $this->cwsDebug->error($this->error);
             return;
         } elseif ($this->status == 404) {
-            $this->error_msg = "HTTP error " . $this->status . " Document Not Found : The server can not find the requested page in the URL.";
-            $this->output();
+            $this->error = 'HTTP error ' . $this->status . ' Document Not Found : The server can not find the requested page in the URL.';
+            $this->cwsDebug->error($this->error);
             return;
         } elseif ($this->status == 500) {
-            $this->error_msg = "HTTP error " . $this->status . " Internal Error : The server encountered an unexpected condition which prevented him from continuing your query.";
-            $this->output();
+            $this->error = 'HTTP error ' . $this->status . ' Internal Error : The server encountered an unexpected condition which prevented him from continuing your query.';
+            $this->cwsDebug->error($this->error);
             return;
-        }
-        
-        if (!empty($this->error_msg) && !empty($this->header_fulltext)) {
-            $this->error_msg .= $this->_newline . $this->_newline . $this->header_fulltext;
-        }
-        
-        if (!empty($this->error_msg) && $output) {
-            $this->output();
         }
     }
     
@@ -594,26 +544,26 @@ class CwsCurl
     {
         if (!strcmp($separator, '')) {
             $separator = $string;
-            $string = $this->_next_token;
+            $string = $this->headerNextToken;
         }
         
         for ($character = 0; $character < strlen($separator); $character++) {
-            if (gettype($position = strpos($string, $separator[$character])) == "integer") {
+            if (gettype($position = strpos($string, $separator[$character])) == 'integer') {
                 $found = (isset($found) ? min($found, $position) : $position);
             }
         }
         
         if (isset($found)) {
-            $this->_next_token = substr($string, $found + 1);
+            $this->headerNextToken = substr($string, $found + 1);
             return substr($string, 0, $found);
         } else {
-            $this->_next_token = '';
+            $this->headerNextToken = '';
             return $string;
         }
     }
     
     /**
-     * Add custom parameters to the cURL request.
+     * Add a query parameter to the cURL request.
      * @param string $name
      * @param string $value
      */
@@ -627,7 +577,7 @@ class CwsCurl
     /**
      * Add an option for the cURL transfer.
      * List of options : http://php.net/manual/en/function.curl-setopt.php
-     * @param int $option : The CURLOPT_XXX option to set.
+     * @param int $option : The CURLOPT_ option to set.
      * @param mixed $value : The value to be set on option.
      */
     public function addOption($option, $value)
@@ -654,12 +604,12 @@ class CwsCurl
      * @param int $port
      * @param int $type
      */
-    public function setProxy($host, $port, $type=CURLPROXY_HTTP)
+    public function setProxy($host, $port, $type = CURLPROXY_HTTP)
     {
         if (!empty($host) && !empty($port)) {
-            $this->proxy_host = stripslashes(trim($host));
-            $this->proxy_port = intval($port);
-            $this->proxy_type = intval($type);
+            $this->proxyHost = stripslashes(trim($host));
+            $this->proxyPort = intval($port);
+            $this->proxyType = intval($type);
         }
     }
     
@@ -669,54 +619,118 @@ class CwsCurl
      * @param string $password
      * @param int $auth
      */
-    public function setProxyAuth($username, $password, $auth_type=CURLAUTH_BASIC)
+    public function setProxyAuth($username, $password, $authType = CURLAUTH_BASIC)
     {
         if (!empty($username) && !empty($password)) {
-            $this->proxy_username = stripslashes(trim($username));
-            $this->proxy_password = stripslashes(trim($password));
-            $this->proxy_auth_type = intval($auth_type);
+            $this->proxyUsername = stripslashes(trim($username));
+            $this->proxyPassword = stripslashes(trim($password));
+            $this->proxyAuthType = intval($authType);
         }
     }
     
     /**
-     * Auto-generated getters and setters
+     * Getters and setters
      */
     
-    public function getVersion()
-    {
-        return $this->version;
-    }
     
+    /**
+     * URL to fetch.
+     * @return the $url
+     */
     public function getUrl()
     {
         return $this->url;
     }
     
+    /**
+     * Set the URL to fetch.
+     * @param string $url
+     */
     public function setUrl($url)
     {
         $this->url = $url;
     }
     
+    /**
+     * HTTP request method.
+     * @return the $method
+     */
     public function getMethod()
     {
         return $this->method;
     }
     
-    public function setMethod($method)
+    /**
+     * Set the DELETE HTTP request method.
+     */
+    public function setDeleteMethod()
+    {
+        $this->setMethod(self::METHOD_DELETE);
+    }
+    
+    /**
+     * Set the GET HTTP request method.
+     */
+    public function setGetMethod()
+    {
+        $this->setMethod(self::METHOD_GET);
+    }
+    
+    /**
+     * Set the HEAD HTTP request method.
+     */
+    public function setHeadMethod()
+    {
+        $this->setMethod(self::METHOD_HEAD);
+    }
+    
+    /**
+     * Set the POST HTTP request method.
+     */
+    public function setPostMethod()
+    {
+        $this->setMethod(self::METHOD_POST);
+    }
+    
+    /**
+     * Set the PUT HTTP request method.
+     */
+    public function setPutMethod()
+    {
+        $this->setMethod(self::METHOD_PUT);
+    }
+    
+    /**
+     * Set the HTTP request method.
+     * @param string $method
+     */
+    private function setMethod($method)
     {
         $this->method = $method;
     }
     
+    /**
+     * Query string parameters.
+     * @return the $params
+     */
     public function getParams()
     {
         return $this->params;
     }
     
+    /**
+     * The maximum number of seconds to allow cURL functions to execute.
+     * @return the $timeout
+     */
     public function getTimeout()
     {
         return $this->timeout;
     }
     
+    /**
+     * Set the maximum number of seconds to allow cURL functions to execute.
+     * @param int $timeout
+     */
     public function setTimeout($timeout)
     {
         $timeout = intval($timeout);
@@ -725,133 +739,253 @@ class CwsCurl
         }
     }
     
+    /**
+     * The contents of the "Referer: " header to be used in a HTTP request.
+     * @return the $referer
+     */
     public function getReferer()
     {
         return $this->referer;
     }
     
+    /**
+     * Set the contents of the "Referer: " header to be used in a HTTP request.
+     * @param int $referer
+     */
     public function setReferer($referer)
     {
         $this->referer = $referer;
     }
     
+    /**
+     * The contents of the "User-Agent: " header to be used in a HTTP request.
+     * @return the $useragent
+     */
     public function getUseragent()
     {
         return $this->useragent;
     }
     
+    /**
+     * Set the Chrome User-Agent to the contents of the "User-Agent: " header to be used in a HTTP request.
+     */
+    public function setChromeUseragent()
+    {
+        $this->setUseragent(self::UA_CHROME);
+    }
+    
+    /**
+     * Set the Firefox User-Agent to the contents of the "User-Agent: " header to be used in a HTTP request.
+     */
+    public function setFirefoxUseragent()
+    {
+        $this->setUseragent(self::UA_FIREFOX);
+    }
+    
+    /**
+     * Set the Googlebot User-Agent to the contents of the "User-Agent: " header to be used in a HTTP request.
+     */
+    public function setGooglebotUseragent()
+    {
+        $this->setUseragent(self::UA_GOOGLEBOT);
+    }
+    
+    /**
+     * Set the Internet Explorer User-Agent to the contents of the "User-Agent: " header to be used in a HTTP request.
+     */
+    public function setIeUseragent()
+    {
+        $this->setUseragent(self::UA_IE);
+    }
+    
+    /**
+     * Set the Opera User-Agent to the contents of the "User-Agent: " header to be used in a HTTP request.
+     */
+    public function setOperaUseragent()
+    {
+        $this->setUseragent(self::UA_OPERA);
+    }
+    
+    /**
+     * Set the contents of the "User-Agent: " header to be used in a HTTP request.
+     * @param string $useragent
+     */
     public function setUseragent($useragent)
     {
         $this->useragent = $useragent;
     }
     
+    /**
+     * The username for the CURLOPT_USERPWD option.
+     * @return the $username
+     */
     public function getUsername()
     {
         return $this->username;
     }
     
+    /**
+     * The password associated to the username for the CURLOPT_USERPWD option.
+     * @return the $password
+     */
     public function getPassword()
     {
         return $this->password;
     }
     
-    public function getRedirect()
+    /**
+     * Redirects allowed.
+     * @return boolean
+     */
+    public function isRedirect()
     {
         return $this->redirect;
     }
     
-    public function getProxyHost()
-    {
-        return $this->proxy_host;
-    }
-    
-    public function getProxyPort()
-    {
-        return $this->proxy_port;
-    }
-    
-    public function getProxyType()
-    {
-        return $this->proxy_type;
-    }
-    
-    public function getProxyAuthType()
-    {
-        return $this->proxy_auth_type;
-    }
-    
-    public function getProxyUsername()
-    {
-        return $this->proxy_username;
-    }
-    
-    public function getProxyPassword()
-    {
-        return $this->proxy_password;
-    }
-    
+    /**
+     * Set allow redirects.
+     * @param boolean $redirect
+     */
     public function setRedirect($redirect)
     {
         $this->redirect = $redirect;
     }
     
+    /**
+     * Maximum redirects allowed.
+     * @return the $maxRedirect
+     */
     public function getMaxRedirect()
     {
-        return $this->max_redirect;
+        return $this->maxRedirect;
     }
     
-    public function setMaxRedirect($max_redirect)
+    /**
+     * Set the maximum redirects allowed.
+     * @param int $maxRedirect
+     */
+    public function setMaxRedirect($maxRedirect)
     {
-        $max_redirect = intval($max_redirect);
+        $maxRedirect = intval($maxRedirect);
         if (!empty($timeout)) {
-            $this->max_redirect = $max_redirect;
+            $this->maxRedirect = $maxRedirect;
         }
     }
     
+    /**
+     * The host IP of the proxy to connect to.
+     * @return the $proxyHost
+     */
+    public function getProxyHost()
+    {
+        return $this->proxyHost;
+    }
+    
+    /**
+     * The port number of the proxy to connect to.
+     * @return the $proxyPort
+     */
+    public function getProxyPort()
+    {
+        return $this->proxyPort;
+    }
+    
+    /**
+     * The proxy type CURLPROXY_HTTP, CURLPROXY_SOCKS4 or CURLPROXY_SOCKS5.
+     * @return the $proxyType
+     */
+    public function getProxyType()
+    {
+        return $this->proxyType;
+    }
+    
+    /**
+     * The HTTP authentication method(s) to use for the proxy connection.
+     * Can be CURLAUTH_BASIC or CURLAUTH_NTLM.
+     * @return the $proxyAuthType
+     */
+    public function getProxyAuthType()
+    {
+        return $this->proxyAuthType;
+    }
+    
+    /**
+     * The username for the CURLOPT_PROXYUSERPWD option.
+     * @return the $proxyUsername
+     */
+    public function getProxyUsername()
+    {
+        return $this->proxyUsername;
+    }
+    
+    /**
+     * The password associated to the proxyUsername for the CURLOPT_PROXYUSERPWD option.
+     * @return the $proxyPassword
+     */
+    public function getProxyPassword()
+    {
+        return $this->proxyPassword;
+    }
+    
+    /**
+     * The cURL session.
+     * @return the $session
+     */
     public function getSession()
     {
         return $this->session;
     }
     
+    /**
+     * The HTTP status code returned.
+     * @return the $status
+     */
     public function getStatus()
     {
         return $this->status;
     }
     
+    /**
+     * The content transferred.
+     * @return the $content
+     */
     public function getContent()
     {
         return $this->content;
     }
     
+    /**
+     * The cURL information regarding the transfer.
+     * @return the $infos
+     */
     public function getInfos()
     {
         return $this->infos;
     }
     
+    /**
+     * The header fulltext response.
+     * @return the $headerFulltext
+     */
     public function getHeaderFulltext()
     {
-        return $this->header_fulltext;
+        return $this->headerFulltext;
     }
     
+    /**
+     * The headers response.
+     * @return the $headers
+     */
     public function getHeaders()
     {
         return $this->headers;
     }
     
-    public function getDebugVerbose()
-    {
-        return $this->debug_verbose;
-    }
-    
-    public function setDebugVerbose($debug_verbose)
-    {
-        $this->debug_verbose = $debug_verbose;
-    }
-    
-    public function getErrorMsg()
-    {
-        return $this->error_msg;
+    /**
+     * The last error.
+     * @return the $error
+     */
+    public function getError() {
+        return $this->error;
     }
 }
-
-?>

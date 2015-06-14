@@ -5,56 +5,54 @@ CwsCurl is a flexible wrapper PHP class for the cURL extension.
 ## Installation
 
 * Enable the [php_curl](http://php.net/manual/en/book.curl.php) extension.
+* Download [CwsDump](https://github.com/crazy-max/CwsDump) and [CwsDebug](https://github.com/crazy-max/CwsDebug).
 * Copy the ``class.cws.curl.php`` file in a folder on your server.
-* Go to ``index.php`` to see an example.
 
 ## Getting started
 
-```php
-<?php
-
-include('class.cws.curl.php');
-
-$cwsCurl = new CwsCurl();
-$cwsCurl->setDebugVerbose(CWSCURL_VERBOSE_DEBUG);               // default : CWSCURL_VERBOSE_QUIET
-$cwsCurl->setUrl("http://www.google.com");                      // The URL to fetch
-$cwsCurl->setMethod(CWSCURL_METHOD_GET);                        // HTTP request method ; default CWSCURL_METHOD_GET
-//$cwsCurl->addParam("name", "value");                          // Add custom parameters.
-//$cwsCurl->addParam("name2", "value2");
-//$cwsCurl->addOption(CURLOPT_SSL_VERIFYPEER, true);            // Add an option for the cURL transfer.
-//$cwsCurl->addOption(CURLOPT_ENCODING, "identity");
-$cwsCurl->setTimeout(10);                                       // The maximum number of seconds to allow cURL functions to execute ; default 10
-//$cwsCurl->setReferer("http://www.example.com");               // The contents of the "Referer: " header
-$cwsCurl->setUserAgent(CWSCURL_UA_FIREFOX);                     // The contents of the "User-Agent: " header ; default CWSCURL_UA_FIREFOX
-//$cwsCurl->setAuth("admin", "admin");                          // The username and password for the CURLOPT_USERPWD option
-$cwsCurl->setRedirect(true);                                    // Allow redirects ; default true
-$cwsCurl->setMaxRedirect(3);                                    // Maximum redirects allowed ; default 3
-//$cwsCurl->setProxy("127.0.0.1", 1080, CURLPROXY_SOCKS5);      // Set a HTTP proxy to tunnel requests through.
-//$cwsCurl->setProxyAuth("admin", "admin", CURLAUTH_BASIC);     // Set a HTTP proxy authentication.
-
-// Process
-$cwsCurl->process();
-
-?>
-```
+See ``example.php`` file sample to help you.
 
 ## Methods
 
-**setDebugVerbose** - Control the debug output.<br />
-**setUrl** - The URL to fetch.<br />
-**setMethod** - HTTP request method. (can be CWSCURL_METHOD_DELETE ; CWSCURL_METHOD_GET ; CWSCURL_METHOD_HEAD ; CWSCURL_METHOD_POST ; CWSCURL_METHOD_PUT)<br />
-**addParam** - Add custom parameters to the cURL request.<br />
-**addOption** - Add an option for the cURL transfer.<br />
-**setTimeout** - The maximum number of seconds to allow cURL functions to execute.<br />
-**setReferer** - The contents of the "Referer: " header to be used in a HTTP request.<br />
-**setUserAgent** - The contents of the "User-Agent: " header to be used in a HTTP request. (can be CWSCURL_UA_CHROME ; CWSCURL_UA_FIREFOX ; CWSCURL_UA_GOOGLEBOT ; CWSCURL_UA_IE ; CWSCURL_UA_OPERA)<br />
-**setAuth** - Set authentication to the cURL request with username and password.<br />
-**setRedirect** - Allow redirects.<br />
-**setMaxRedirect** - Maximum redirects allowed.<br />
-**setProxy** - Set a HTTP proxy to tunnel requests through.<br />
-**setProxyAuth** - Set a HTTP proxy authentication.<br />
-
 **process** - Start the cURL request.<br />
+
+**getUrl** - The URL to fetch.<br />
+**setUrl** - Set the URL to fetch.<br />
+**getMethod** - The HTTP request method.<br />
+**setDeleteMethod** - Set DELETE HTTP request method.<br />
+**setGetMethod** - Set GET HTTP request method. (default)<br />
+**setHeadMethod** - Set HEAD HTTP request method.<br />
+**setPostMethod** - Set POST HTTP request method.<br />
+**setPutMethod** - Set PUT HTTP request method.<br />
+**getParams** - Query string parameters.<br />
+**addParam** - Add a custom parameter to the cURL request.<br />
+**addOption** - Add an option for the cURL transfer.<br />
+**getTimeout** - The maximum number of seconds to allow cURL functions to execute.<br />
+**setTimeout** - Set the maximum number of seconds to allow cURL functions to execute.<br />
+**getReferer** - The contents of the "Referer: " header to be used in a HTTP request.<br />
+**setReferer** - Set the contents of the "Referer: " header to be used in a HTTP request.<br />
+**getUserAgent** - The contents of the "User-Agent: " header to be used in a HTTP request.<br />
+**setChromeUseragent** - Set the Chrome User-Agent to the contents of the "User-Agent: " header to be used in a HTTP request.<br />
+**setFirefoxUseragent** - Set the Firefox User-Agent to the contents of the "User-Agent: " header to be used in a HTTP request.<br />
+**setGooglebotUseragent** - Set the Googlebot User-Agent to the contents of the "User-Agent: " header to be used in a HTTP request.<br />
+**setIeUseragent** - Set the Internet Explorer User-Agent to the contents of the "User-Agent: " header to be used in a HTTP request.<br />
+**setOperaUseragent** - Set the Opera User-Agent to the contents of the "User-Agent: " header to be used in a HTTP request.<br />
+**setUserAgent** - Set The contents of the "User-Agent: " header to be used in a HTTP request.<br />
+**getUsername** - The username for the CURLOPT_USERPWD option.<br />
+**getPassword** - The password associated to the username for the CURLOPT_USERPWD option.<br />
+**setAuth** - Set authentication to the cURL request with username and password.<br />
+**isRedirect** - Redirects allowed.<br />
+**setRedirect** - Set allow redirects.<br />
+**getMaxRedirect** - Maximum redirects allowed.<br />
+**setMaxRedirect** - Set the maximum redirects allowed.<br />
+**getProxyHost** - The host IP of the proxy to connect to.<br />
+**getProxyPort** - The port number of the proxy to connect to.<br />
+**getProxyType** - The proxy type CURLPROXY_HTTP, CURLPROXY_SOCKS4 or CURLPROXY_SOCKS5.<br />
+**setProxy** - Set a HTTP proxy to tunnel requests through.<br />
+**getProxyAuthType** - The HTTP authentication method(s) to use for the proxy connection. Can be CURLAUTH_BASIC or CURLAUTH_NTLM.<br />
+**getProxyUsername** - The username for the CURLOPT_PROXYUSERPWD option.<br />
+**getProxyPassword** - The password associated to the proxyUsername for the CURLOPT_PROXYUSERPWD option.<br />
+**setProxyAuth** - Set a HTTP proxy authentication.<br /><br />
 
 **getSession** - The current cURL session.<br />
 **getStatus** - The HTTP status code returned.<br />
@@ -62,6 +60,7 @@ $cwsCurl->process();
 **getInfos** - The cURL information regarding the transfer.<br />
 **getHeaderFulltext** - The header fulltext response.<br />
 **getHeaders** - The headers response.<br />
+**getError** - Get the last error.<br />
 
 ## License
 
