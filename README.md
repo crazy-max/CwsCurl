@@ -12,6 +12,10 @@ CwsCurl is a flexible wrapper PHP class for the cURL extension.
 
 See ``example.php`` file sample to help you.
 
+## Example
+
+![](https://raw.github.com/crazy-max/CwsCurl/master/example.png)
+
 ## Methods
 
 **process** - Start the cURL request.<br />
