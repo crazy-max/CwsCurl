@@ -24,7 +24,7 @@
  * @author Cr@zy
  * @copyright 2013-2015, Cr@zy
  * @license GNU LESSER GENERAL PUBLIC LICENSE
- * @version 1.5
+ * @version 1.6
  * @link https://github.com/crazy-max/CwsCurl
  *
  */
@@ -73,7 +73,7 @@ class CwsCurl
      * default 10
      * @var int
      */
-    private $timeout = 10;
+    private $timeout;
     
     /**
      * The contents of the "Referer: " header to be used in a HTTP request.
@@ -105,14 +105,14 @@ class CwsCurl
      * default true
      * @var boolean
      */
-    private $redirect = true;
+    private $redirect;
     
     /**
      * Maximum redirects allowed.
      * default 3
      * @var int
      */
-    private $maxRedirect = 3;
+    private $maxRedirect;
     
     /**
      * The host IP of the proxy to connect to.
@@ -208,14 +208,44 @@ class CwsCurl
     public function __construct(CwsDebug $cwsDebug)
     {
         $this->cwsDebug = $cwsDebug;
-        $this->mode = self::METHOD_GET;
-        $this->useragent = self::UA_FIREFOX;
+        $this->reset();
         
         if (!in_array('curl', get_loaded_extensions())) {
             $this->error = 'The cURL extension is not loaded...';
             $this->cwsDebug->error($this->error);
             exit();
         }
+    }
+    
+    /**
+     * Reset
+     */
+    public function reset()
+    {
+        $this->url = null;
+        $this->method = self::METHOD_GET;
+        $this->params = array();
+        $this->options = array();
+        $this->timeout = 10;
+        $this->referer = null;
+        $this->useragent = self::UA_FIREFOX;
+        $this->username = null;
+        $this->password = null;
+        $this->username = null;
+        $this->redirect = true;
+        $this->maxRedirect = 3;
+        $this->proxyHost = null;
+        $this->proxyPort = null;
+        $this->proxyType = null;
+        $this->proxyAuthType = null;
+        $this->proxyUsername = null;
+        $this->proxyPassword = null;
+        $this->status = null;
+        $this->content = null;
+        $this->infos = null;
+        $this->headerFulltext = null;
+        $this->headers = array();
+        $this->error = null;
     }
     
     /**

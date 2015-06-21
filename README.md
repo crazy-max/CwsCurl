@@ -18,6 +18,7 @@ See ``example.php`` file sample to help you.
 
 ## Methods
 
+**reset** - Reset.<br />
 **process** - Start the cURL request.<br />
 
 **getUrl** - The URL to fetch.<br />
