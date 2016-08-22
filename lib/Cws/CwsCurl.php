@@ -175,7 +175,7 @@ class CwsCurl
     
     /**
      * A temporary token for headers parsing.
-     * @var array
+     * @var string
      */
     private $headerNextToken;
     
@@ -254,7 +254,7 @@ class CwsCurl
                 curl_setopt($this->session, CURLOPT_CUSTOMREQUEST, self::METHOD_DELETE);
                 break;
             case self::METHOD_GET:
-                if ($data != null) {
+                if ($data !== null) {
                     $this->url = $this->url . '?' . $data;
                 }
                 curl_setopt($this->session, CURLOPT_HTTPGET, true);
@@ -636,7 +636,7 @@ class CwsCurl
      * Set a HTTP proxy authentication.
      * @param string $username
      * @param string $password
-     * @param int $auth
+     * @param int $authType
      */
     public function setProxyAuth($username, $password, $authType = CURLAUTH_BASIC)
     {
@@ -769,7 +769,7 @@ class CwsCurl
     
     /**
      * Set the contents of the "Referer: " header to be used in a HTTP request.
-     * @param int $referer
+     * @param string $referer
      */
     public function setReferer($referer)
     {
@@ -886,7 +886,7 @@ class CwsCurl
     public function setMaxRedirect($maxRedirect)
     {
         $maxRedirect = intval($maxRedirect);
-        if (!empty($timeout)) {
+        if (!empty($maxRedirect)) {
             $this->maxRedirect = $maxRedirect;
         }
     }
