@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.8 (2016/08/22)
+
+* Scrutinizer issues
+
 ## 1.7 (2016/08/22)
 
 * Add composer.json
