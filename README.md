@@ -1,16 +1,30 @@
+[![Build Status](https://travis-ci.org/crazy-max/CwsCurl.svg?branch=master)](https://travis-ci.org/crazy-max/CwsCurl) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/crazy-max/CwsCurl/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/crazy-max/CwsCurl/?branch=master)
+
 # CwsCurl
 
-CwsCurl is a flexible wrapper PHP class for the cURL extension.
+A flexible wrapper PHP class for the cURL extension.
 
-## Installation
+## Requirements
 
-* Enable the [php_curl](http://php.net/manual/en/book.curl.php) extension.
-* Download [CwsDump](https://github.com/crazy-max/CwsDump) and [CwsDebug](https://github.com/crazy-max/CwsDebug).
-* Copy the ``class.cws.curl.php`` file in a folder on your server.
+* PHP >= 5.3
+* CwsDebug >= 1.8
+* Enable the [php_curl](http://php.net/manual/en/book.curl.php) extension
+
+## Installation with Composer
+
+```bash
+composer require crazy-max/cws-curl
+```
+
+And download the code:
+
+```bash
+composer install # or update
+```
 
 ## Getting started
 
-See ``example.php`` file sample to help you.
+See `tests/test.php` file sample to help you.
 
 ## Example
 

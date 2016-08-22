@@ -1,18 +1,13 @@
 <?php
 
-// Download CwsDump at https://github.com/crazy-max/CwsDump
-require_once '../CwsDump/class.cws.dump.php';
-$cwsDump = new CwsDump();
+require_once __DIR__ . '/../vendor/autoload.php'; // Autoload files using Composer autoload
 
-// Download CwsDebug at https://github.com/crazy-max/CwsDebug
-require_once '../CwsDebug/class.cws.debug.php';
-$cwsDebug = new CwsDebug($cwsDump);
+$cwsDebug = new Cws\CwsDebug();
 $cwsDebug->setDebugVerbose();
 $cwsDebug->setEchoMode();
 
-require_once 'class.cws.curl.php';
-$cwsCurl = new CwsCurl($cwsDebug);
-
+// Start CwsCurl
+$cwsCurl = new Cws\CwsCurl($cwsDebug);
 $cwsCurl->setUrl("https://www.google.com"); // The URL to fetch
 $cwsCurl->setGetMethod(); // HTTP request method ; default METHOD_GET
 //$cwsCurl->setPostMethod();
