@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../vendor/autoload.php'; // Autoload files using Composer autoload
+require_once __DIR__.'/../vendor/autoload.php'; // Autoload files using Composer autoload
 
 $cwsDebug = new Cws\CwsDebug();
 $cwsDebug->setDebugVerbose();
@@ -8,7 +8,7 @@ $cwsDebug->setEchoMode();
 
 // Start CwsCurl
 $cwsCurl = new Cws\CwsCurl($cwsDebug);
-$cwsCurl->setUrl("https://www.google.com"); // The URL to fetch
+$cwsCurl->setUrl('https://www.google.com'); // The URL to fetch
 $cwsCurl->setGetMethod(); // HTTP request method ; default METHOD_GET
 //$cwsCurl->setPostMethod();
 //$cwsCurl->addParam("name", "value"); // Add custom parameters.
