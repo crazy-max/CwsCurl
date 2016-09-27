@@ -1,7 +1,8 @@
 [![Latest Stable Version](https://img.shields.io/packagist/v/crazy-max/cws-curl.svg?style=flat-square)](https://packagist.org/packages/crazy-max/cws-curl)
 [![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%205.3.0-8892BF.svg?style=flat-square)](https://php.net/)
 [![Build Status](https://img.shields.io/travis/crazy-max/CwsCurl/master.svg?style=flat-square)](https://travis-ci.org/crazy-max/CwsCurl)
-[![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/crazy-max/CwsCurl.svg?style=flat-square)](https://scrutinizer-ci.com/g/crazy-max/CwsCurl)
+[![Code Quality](https://img.shields.io/codacy/grade/bf248165410141b0a323d9ac9fe49248.svg?style=flat-square)](https://www.codacy.com/app/crazy-max/CwsCurl)
+[![StyleCI](https://styleci.io/repos/10057054/shield?style=flat-square)](https://styleci.io/repos/10057054)
 [![Gemnasium](https://img.shields.io/gemnasium/crazy-max/CwsCurl.svg?style=flat-square)](https://gemnasium.com/github.com/crazy-max/CwsCurl)
 
 # CwsCurl
