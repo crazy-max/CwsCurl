@@ -699,7 +699,6 @@ class CwsCurl
      * Getters and setters.
      */
 
-
     /**
      * URL to fetch.
      *
