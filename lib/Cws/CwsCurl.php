@@ -234,8 +234,8 @@ class CwsCurl
     {
         $this->url = null;
         $this->method = self::METHOD_GET;
-        $this->params = [];
-        $this->options = [];
+        $this->params = array();
+        $this->options = array();
         $this->timeout = 10;
         $this->referer = null;
         $this->useragent = self::UA_FIREFOX;
@@ -254,7 +254,7 @@ class CwsCurl
         $this->content = null;
         $this->infos = null;
         $this->headerFulltext = null;
-        $this->headers = [];
+        $this->headers = array();
         $this->error = null;
     }
 
@@ -462,12 +462,12 @@ class CwsCurl
      */
     private function parseResponse($response, $infos)
     {
-        $result = [
+        $result = array(
             'headerFulltext' => '',
-            'headers'        => [],
+            'headers'        => array(),
             'status'         => 0,
             'content'        => '',
-        ];
+        );
 
         $length = isset($infos['header_size']) ? $infos['header_size'] : 0;
 
@@ -502,7 +502,7 @@ class CwsCurl
 
                     if (isset($result['headers'][$name])) {
                         if (gettype($result['headers'][$name]) == 'string') {
-                            $result['headers'][$name] = [$result['headers'][$name]];
+                            $result['headers'][$name] = array($result['headers'][$name]);
                         }
                         $result['headers'][$name][] = $value;
                     } else {

@@ -1,0 +1,4 @@
+preset: recommended
+
+enabled:
+  - long_array_syntax
