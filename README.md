@@ -4,18 +4,13 @@
 [![Code Quality](https://img.shields.io/codacy/grade/bf248165410141b0a323d9ac9fe49248.svg?style=flat-square)](https://www.codacy.com/app/crazy-max/CwsCurl)
 [![StyleCI](https://styleci.io/repos/10057054/shield?style=flat-square)](https://styleci.io/repos/10057054)
 [![Gemnasium](https://img.shields.io/gemnasium/crazy-max/CwsCurl.svg?style=flat-square)](https://gemnasium.com/github.com/crazy-max/CwsCurl)
+[![Donate Paypal](https://img.shields.io/badge/donate-paypal-7057ff.svg?style=flat-square)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ECNZJ3UYAX7PU)
 
-# CwsCurl
+## About
 
 A flexible wrapper PHP class for the cURL extension.
 
-## Requirements
-
-* PHP >= 5.3.0
-* CwsDebug >= 1.8
-* Enable the [php_curl](http://php.net/manual/en/book.curl.php) extension
-
-## Installation with Composer
+## Installation
 
 ```bash
 composer require crazy-max/cws-curl
@@ -33,7 +28,7 @@ See `tests/test.php` file sample to help you.
 
 ## Example
 
-![](https://raw.github.com/crazy-max/CwsCurl/master/example.png)
+![](.res/example.png)
 
 ## Methods
 
@@ -86,10 +81,14 @@ See `tests/test.php` file sample to help you.
 **getHeaders** - The headers response.<br />
 **getError** - Get the last error.<br />
 
+## How can i help ?
+
+We welcome all kinds of contributions :raised_hands:!<br />
+The most basic way to show your support is to star :star2: the project, or to raise issues :speech_balloon:<br />
+Any funds donated will be used to help further development on this project! :gift_heart:
+
+[![Donate Paypal](.res/paypal.png)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ECNZJ3UYAX7PU)
+
 ## License
 
-LGPL. See `LICENSE` for more details.
-
-## More infos
-
-http://www.crazyws.fr/dev/classes-php/cwscurl-une-classe-wrapper-pour-extension-curl-php-KLV4G.html
+MIT. See `LICENSE` for more details.
