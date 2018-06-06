@@ -4,7 +4,6 @@
 [![Code Quality](https://img.shields.io/codacy/grade/bf248165410141b0a323d9ac9fe49248.svg?style=flat-square)](https://www.codacy.com/app/crazy-max/CwsCurl)
 [![StyleCI](https://styleci.io/repos/10057054/shield?style=flat-square)](https://styleci.io/repos/10057054)
 [![Libraries.io](https://img.shields.io/librariesio/github/crazy-max/CwsCurl.svg?style=flat-square)](https://libraries.io/github/crazy-max/CwsCurl)
-[![Beerpay](https://img.shields.io/beerpay/crazy-max/CwsCurl.svg?style=flat-square)](https://beerpay.io/crazy-max/CwsCurl)
 [![Donate Paypal](https://img.shields.io/badge/donate-paypal-7057ff.svg?style=flat-square)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ECNZJ3UYAX7PU)
 
 ## About
@@ -88,8 +87,7 @@ All kinds of contributions are welcomed :raised_hands:!<br />
 The most basic way to show your support is to star :star2: the project, or to raise issues :speech_balloon:<br />
 But we're not gonna lie to each other, I'd rather you buy me a beer or two :beers:!
 
-[![Beerpay](https://beerpay.io/crazy-max/CwsCurl/badge.svg?style=beer-square)](https://beerpay.io/crazy-max/CwsCurl)
-or [![Paypal](.res/paypal.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ECNZJ3UYAX7PU)
+[![Paypal](.res/paypal.png)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ECNZJ3UYAX7PU)
 
 ## License
 
