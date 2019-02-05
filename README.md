@@ -1,6 +1,6 @@
 [![Latest Stable Version](https://img.shields.io/packagist/v/crazy-max/cws-curl.svg?style=flat-square)](https://packagist.org/packages/crazy-max/cws-curl)
 [![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%205.3.0-8892BF.svg?style=flat-square)](https://php.net/)
-[![Build Status](https://img.shields.io/travis/crazy-max/CwsCurl/master.svg?style=flat-square)](https://travis-ci.org/crazy-max/CwsCurl)
+[![Build Status](https://img.shields.io/travis/com/crazy-max/CwsCurl/master.svg?style=flat-square)](https://travis-ci.com/crazy-max/CwsCurl)
 [![Code Quality](https://img.shields.io/codacy/grade/bf248165410141b0a323d9ac9fe49248.svg?style=flat-square)](https://www.codacy.com/app/crazy-max/CwsCurl)
 [![Donate Paypal](https://img.shields.io/badge/donate-paypal-7057ff.svg?style=flat-square)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ECNZJ3UYAX7PU)
 
@@ -79,9 +79,9 @@ See `tests/test.php` file sample to help you.
 **getHeaders** - The headers response.<br />
 **getError** - Get the last error.<br />
 
-## How can i help ?
+## How can I help ?
 
-All kinds of contributions are welcomed :raised_hands:!<br />
+All kinds of contributions are welcome :raised_hands:!<br />
 The most basic way to show your support is to star :star2: the project, or to raise issues :speech_balloon:<br />
 But we're not gonna lie to each other, I'd rather you buy me a beer or two :beers:!
 
