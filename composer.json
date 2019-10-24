@@ -1,4 +1,5 @@
 {
+  "abandoned": true,
   "name": "crazy-max/cws-curl",
   "type":  "library",
   "description": "A flexible wrapper PHP class for the cURL extension.",
